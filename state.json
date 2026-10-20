@@ -1,5 +1,25 @@
 {
-  "done_slots": [],
-  "last_values": {},
-  "log": []
+ "done_slots": [
+  "manual"
+ ],
+ "last_values": {
+  "gold18": 26514400.0,
+  "mesghal": 114855000.0,
+  "coin": 268080000.0,
+  "nim": 142130000.0,
+  "rob": 75670000.0,
+  "gerami": 38000000.0,
+  "ons": 4113.07
+ },
+ "log": [
+  {
+   "at": "2026-10-20T16:39:17+03:30",
+   "status": "posted",
+   "message": "پست شد"
+  }
+ ],
+ "last_post_at": "2026-10-20T16:39:17+03:30",
+ "last_status": "posted",
+ "last_message": "پست شد",
+ "last_run_at": "2026-10-20T16:39:17+03:30"
 }

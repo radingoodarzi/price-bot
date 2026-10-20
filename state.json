@@ -15,6 +15,11 @@
  },
  "log": [
   {
+   "at": "2026-10-20T21:01:04+03:30",
+   "status": "error",
+   "message": "اتصال به تلگرام برقرار نشد: ReadTimeout"
+  },
+  {
    "at": "2026-10-20T19:50:24+03:30",
    "status": "posted",
    "message": "پست شد"
@@ -31,9 +36,9 @@
   }
  ],
  "last_post_at": "2026-10-20T19:50:24+03:30",
- "last_status": "posted",
- "last_message": "پست شد",
- "last_run_at": "2026-10-20T19:50:24+03:30",
+ "last_status": "error",
+ "last_message": "اتصال به تلگرام برقرار نشد: ReadTimeout",
+ "last_run_at": "2026-10-20T21:01:04+03:30",
  "recent_posts": [
   "2026-10-20T19:23:01+03:30",
   "2026-10-20T19:50:24+03:30"

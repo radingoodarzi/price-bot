@@ -2,19 +2,95 @@
   "enabled": true,
   "timezone": "Asia/Tehran",
   "schedule": {
-    "times": ["09:00", "12:00", "15:00", "18:00", "21:00"],
+    "times": [
+      "09:00",
+      "12:00",
+      "15:00",
+      "18:00",
+      "21:00"
+    ],
     "days": [],
     "grace_minutes": 60,
     "skip_unchanged": true
   },
   "slots": [
-    {"key": "gold18", "label": "گرم طلا ۱۸ عیار", "unit": "تومان", "source": {"type": "tgju", "slug": "geram18", "divisor": 10, "decimals": 0}},
-    {"key": "mesghal", "label": "مثقال طلا ۱۷ عیار", "unit": "تومان", "source": {"type": "tgju", "slug": "mesghal", "divisor": 10, "decimals": 0}},
-    {"key": "coin", "label": "تمام سکه جدید", "unit": "تومان", "source": {"type": "tgju", "slug": "sekee", "divisor": 10, "decimals": 0}},
-    {"key": "nim", "label": "نیم سکه", "unit": "تومان", "source": {"type": "tgju", "slug": "nim", "divisor": 10, "decimals": 0}},
-    {"key": "rob", "label": "ربع سکه", "unit": "تومان", "source": {"type": "tgju", "slug": "rob", "divisor": 10, "decimals": 0}},
-    {"key": "gerami", "label": "گرمی بانکی", "unit": "تومان", "source": {"type": "tgju", "slug": "gerami", "divisor": 10, "decimals": 0}},
-    {"key": "ons", "label": "انس جهانی", "unit": "دلار", "source": {"type": "tgju", "slug": "ons", "divisor": 1, "decimals": 1}}
+    {
+      "key": "gold18",
+      "label": "گرم طلا ۱۸ عیار",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "geram18",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "mesghal",
+      "label": "مثقال طلا ۱۷ عیار",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "mesghal",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "coin",
+      "label": "تمام سکه جدید",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "sekee",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "nim",
+      "label": "نیم سکه",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "nim",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "rob",
+      "label": "ربع سکه",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "rob",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "gerami",
+      "label": "گرمی بانکی",
+      "unit": "تومان",
+      "source": {
+        "type": "tgju",
+        "slug": "gerami",
+        "divisor": 10,
+        "decimals": 0
+      }
+    },
+    {
+      "key": "ons",
+      "label": "انس جهانی",
+      "unit": "دلار",
+      "source": {
+        "type": "tgju",
+        "slug": "ons",
+        "divisor": 1,
+        "decimals": 1
+      }
+    }
   ],
   "caption": "قیمت روز سکه و طلا — گلد گالری\n🗓 {date} ⏰ {time}\n\n{lines}"
 }

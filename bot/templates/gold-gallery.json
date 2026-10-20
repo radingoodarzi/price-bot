@@ -1,0 +1,9 @@
+{
+  "image": "template-clean.png",
+  "width": 1024,
+  "height": 1536,
+  "price": {"x": 390, "max_width": 318, "font_size": 60},
+  "price_y": [552, 662, 778, 892, 1004, 1121, 1240],
+  "date": {"x": 631, "y": 434, "font_size": 37},
+  "time": {"x": 228, "y": 434, "font_size": 37}
+}

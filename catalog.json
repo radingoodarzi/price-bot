@@ -1,0 +1,486 @@
+[
+ {
+  "slug": "sekee",
+  "name": "سکه"
+ },
+ {
+  "slug": "geram18",
+  "name": "طلا ۱۸"
+ },
+ {
+  "slug": "price_dollar_rl",
+  "name": "دلار"
+ },
+ {
+  "slug": "gc30",
+  "name": "بورس"
+ },
+ {
+  "slug": "ons",
+  "name": "انس طلا"
+ },
+ {
+  "slug": "mesghal",
+  "name": "مثقال طلا"
+ },
+ {
+  "slug": "oil_brent",
+  "name": "نفت برنت"
+ },
+ {
+  "slug": "crypto-tether-irr",
+  "name": "تتر"
+ },
+ {
+  "slug": "crypto-bitcoin",
+  "name": "بیت کوین"
+ },
+ {
+  "slug": "silver",
+  "name": "انس نقره"
+ },
+ {
+  "slug": "platinum",
+  "name": "انس پلاتین"
+ },
+ {
+  "slug": "palladium",
+  "name": "انس پالادیوم"
+ },
+ {
+  "slug": "geram24",
+  "name": "طلای 24 عیار"
+ },
+ {
+  "slug": "gold_mini_size",
+  "name": "طلای دست دوم"
+ },
+ {
+  "slug": "silver_999",
+  "name": "گرم نقره ۹۹۹"
+ },
+ {
+  "slug": "gold_futures",
+  "name": "آبشده نقدی"
+ },
+ {
+  "slug": "gold_melted_transfer",
+  "name": "آبشده معاملاتی"
+ },
+ {
+  "slug": "gold_17",
+  "name": "مثقال / بدون حباب"
+ },
+ {
+  "slug": "ime_fund_ayar",
+  "name": "صندوق طلای عیار"
+ },
+ {
+  "slug": "ime_fund_lotuss",
+  "name": "صندوق طلای لوتوس"
+ },
+ {
+  "slug": "ime_fund_mesghal",
+  "name": "صندوق طلای مثقال"
+ },
+ {
+  "slug": "ime_fund_gohar",
+  "name": "صندوق طلای گوهر"
+ },
+ {
+  "slug": "sekeb",
+  "name": "سکه بهار آزادی"
+ },
+ {
+  "slug": "nim",
+  "name": "نیم سکه"
+ },
+ {
+  "slug": "rob",
+  "name": "ربع سکه"
+ },
+ {
+  "slug": "gerami",
+  "name": "سکه گرمی"
+ },
+ {
+  "slug": "coin_blubber",
+  "name": "حباب سکه امامی"
+ },
+ {
+  "slug": "sekeb_blubber",
+  "name": "حباب سکه بهار آزادی"
+ },
+ {
+  "slug": "nim_blubber",
+  "name": "حباب نیم سکه"
+ },
+ {
+  "slug": "rob_blubber",
+  "name": "حباب ربع سکه"
+ },
+ {
+  "slug": "gerami_blubber",
+  "name": "حباب سکه گرمی"
+ },
+ {
+  "slug": "retail_sekee",
+  "name": "سکه امامی"
+ },
+ {
+  "slug": "retail_sekeb",
+  "name": "سکه بهار آزادی"
+ },
+ {
+  "slug": "retail_nim",
+  "name": "نیم سکه"
+ },
+ {
+  "slug": "retail_rob",
+  "name": "ربع سکه"
+ },
+ {
+  "slug": "retail_gerami",
+  "name": "سکه گرمی"
+ },
+ {
+  "slug": "ime_fund_kahroba",
+  "name": "صندوق طلای کهربا"
+ },
+ {
+  "slug": "ime_fund_zarvan",
+  "name": "صندوق طلای زروان"
+ },
+ {
+  "slug": "ime_fund_riton",
+  "name": "صندوق طلای ریتون"
+ },
+ {
+  "slug": "ime_fund_naab",
+  "name": "صندوق طلای ناب"
+ },
+ {
+  "slug": "ime_fund_tabesh",
+  "name": "صندوق طلای تابش"
+ },
+ {
+  "slug": "price_eur",
+  "name": "یورو"
+ },
+ {
+  "slug": "price_aed",
+  "name": "درهم امارات"
+ },
+ {
+  "slug": "price_gbp",
+  "name": "پوند انگلیس"
+ },
+ {
+  "slug": "price_try",
+  "name": "لیر ترکیه"
+ },
+ {
+  "slug": "price_chf",
+  "name": "فرانک سوئیس"
+ },
+ {
+  "slug": "price_cny",
+  "name": "یوان چین"
+ },
+ {
+  "slug": "price_jpy",
+  "name": "ین ژاپن"
+ },
+ {
+  "slug": "price_krw",
+  "name": "وون کره جنوبی"
+ },
+ {
+  "slug": "price_cad",
+  "name": "دلار کانادا"
+ },
+ {
+  "slug": "price_aud",
+  "name": "دلار استرالیا"
+ },
+ {
+  "slug": "price_nzd",
+  "name": "دلار نیوزیلند"
+ },
+ {
+  "slug": "price_sgd",
+  "name": "دلار سنگاپور"
+ },
+ {
+  "slug": "price_inr",
+  "name": "روپیه هند"
+ },
+ {
+  "slug": "price_pkr",
+  "name": "روپیه پاکستان"
+ },
+ {
+  "slug": "price_iqd",
+  "name": "دینار عراق"
+ },
+ {
+  "slug": "price_syp",
+  "name": "لیر سوریه"
+ },
+ {
+  "slug": "price_afn",
+  "name": "افغانی"
+ },
+ {
+  "slug": "price_dkk",
+  "name": "کرون دانمارک"
+ },
+ {
+  "slug": "price_sek",
+  "name": "کرون سوئد"
+ },
+ {
+  "slug": "price_nok",
+  "name": "کرون نروژ"
+ },
+ {
+  "slug": "price_sar",
+  "name": "ریال عربستان"
+ },
+ {
+  "slug": "price_qar",
+  "name": "ریال قطر"
+ },
+ {
+  "slug": "price_omr",
+  "name": "ریال عمان"
+ },
+ {
+  "slug": "price_kwd",
+  "name": "دینار کویت"
+ },
+ {
+  "slug": "price_bhd",
+  "name": "دینار بحرین"
+ },
+ {
+  "slug": "price_myr",
+  "name": "رینگیت مالزی"
+ },
+ {
+  "slug": "price_thb",
+  "name": "بات تایلند"
+ },
+ {
+  "slug": "price_hkd",
+  "name": "دلار هنگ کنگ"
+ },
+ {
+  "slug": "price_rub",
+  "name": "روبل روسیه"
+ },
+ {
+  "slug": "price_azn",
+  "name": "منات آذربایجان"
+ },
+ {
+  "slug": "price_amd",
+  "name": "درام ارمنستان"
+ },
+ {
+  "slug": "price_gel",
+  "name": "لاری گرجستان"
+ },
+ {
+  "slug": "price_kgs",
+  "name": "سوم قرقیزستان"
+ },
+ {
+  "slug": "price_tjs",
+  "name": "سامانی تاجیکستان"
+ },
+ {
+  "slug": "price_tmt",
+  "name": "منات ترکمنستان"
+ },
+ {
+  "slug": "mex_exchange_usd_sell",
+  "name": "صرافی ملی ایران"
+ },
+ {
+  "slug": "ice_exchange_mellat_exusd_sell",
+  "name": "صرافی ملت"
+ },
+ {
+  "slug": "ice_exchange_sepehr_exusd_sell",
+  "name": "صرافی سپهر صادرات"
+ },
+ {
+  "slug": "shahrexchange_usd_sell",
+  "name": "صرافی شهر"
+ },
+ {
+  "slug": "ex_sa_exchange_usd_sell",
+  "name": "صرافی بانک سرمایه"
+ },
+ {
+  "slug": "maskanexchange_usd_sell",
+  "name": "صرافی مسکن"
+ },
+ {
+  "slug": "mojtahedi_usd_sell",
+  "name": "صرافی مجتهدی"
+ },
+ {
+  "slug": "sarafiyousefabad_usd_sell",
+  "name": "صرافی یوسف آباد"
+ },
+ {
+  "slug": "arshinexchange_usd_sell",
+  "name": "صرافی آرشین"
+ },
+ {
+  "slug": "altinexchange_usd_sell",
+  "name": "صرافی آلتین"
+ },
+ {
+  "slug": "sarrafkhaneh_usd_sell",
+  "name": "صرافی صرافخانه"
+ },
+ {
+  "slug": "kajex_usd_sell",
+  "name": "صرافی کاج"
+ },
+ {
+  "slug": "melalexchangeco_usd_sell",
+  "name": "صرافی ملل"
+ },
+ {
+  "slug": "sarafiyaran_usd_sell",
+  "name": "صرافی یاران"
+ },
+ {
+  "slug": "namdarex_usd_sell",
+  "name": "صرافی نامدار"
+ },
+ {
+  "slug": "sabaexchange_usd_sell",
+  "name": "صرافی صبا"
+ },
+ {
+  "slug": "sarafiroyal_usd_sell",
+  "name": "صرافی رویال"
+ },
+ {
+  "slug": "crypto-ethereum",
+  "name": "اتریوم"
+ },
+ {
+  "slug": "crypto-litecoin",
+  "name": "لایت کوین"
+ },
+ {
+  "slug": "crypto-bitcoin-cash",
+  "name": "بیت کوین کش"
+ },
+ {
+  "slug": "crypto-tether",
+  "name": "تتر"
+ },
+ {
+  "slug": "crypto-tron",
+  "name": "ترون"
+ },
+ {
+  "slug": "crypto-binance-coin",
+  "name": "بایننس کوین"
+ },
+ {
+  "slug": "crypto-stellar",
+  "name": "استلار"
+ },
+ {
+  "slug": "crypto-ripple",
+  "name": "ریپل"
+ },
+ {
+  "slug": "crypto-dogecoin",
+  "name": "دوج کوین"
+ },
+ {
+  "slug": "crypto-dash",
+  "name": "دش"
+ },
+ {
+  "slug": "crypto-cardano",
+  "name": "کاردانو"
+ },
+ {
+  "slug": "crypto-polkadot",
+  "name": "پولکادات"
+ },
+ {
+  "slug": "crypto-solana",
+  "name": "سولانا"
+ },
+ {
+  "slug": "crypto-avalanche",
+  "name": "آوالانچ"
+ },
+ {
+  "slug": "crypto-shiba-inu",
+  "name": "شیبا اینو"
+ },
+ {
+  "slug": "crypto-toncoin",
+  "name": "تون‌کوین"
+ },
+ {
+  "slug": "eur-usd-ask",
+  "name": "EUR/USD"
+ },
+ {
+  "slug": "gbp-usd-ask",
+  "name": "GBP/USD"
+ },
+ {
+  "slug": "usd-cad-ask",
+  "name": "USD/CAD"
+ },
+ {
+  "slug": "usd-jpy-ask",
+  "name": "USD/JPY"
+ },
+ {
+  "slug": "usd-chf-ask",
+  "name": "USD/CHF"
+ },
+ {
+  "slug": "aud-usd-ask",
+  "name": "AUD/USD"
+ },
+ {
+  "slug": "usd-try-ask",
+  "name": "USD/TRY"
+ },
+ {
+  "slug": "usd-sar-ask",
+  "name": "USD/SAR"
+ },
+ {
+  "slug": "usd-nzd-ask",
+  "name": "USD/NZD"
+ },
+ {
+  "slug": "usd-krw-ask",
+  "name": "USD/KRW"
+ },
+ {
+  "slug": "usd-cny-ask",
+  "name": "USD/CNY"
+ },
+ {
+  "slug": "usd-sek-ask",
+  "name": "USD/SEK"
+ }
+]

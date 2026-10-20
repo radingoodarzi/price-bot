@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>پنل ربات قیمت</title>
+<style>
+@font-face { font-family: "Vazir"; src: url(Vazirmatn-wght.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+:root { --bg:#0d1224; --panel:#151b33; --panel2:#1c2442; --line:#2a3358; --text:#eef0f8; --muted:#8f99bb;
+  --accent:#d4af37; --ok:#19b36b; --bad:#e5484d; --warn:#f0a020; }
+* { box-sizing: border-box; letter-spacing: 0; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:"Vazir",system-ui,sans-serif; line-height:1.7; }
+.wrap { max-width:980px; margin:0 auto; padding:20px 16px 90px; }
+h1 { font-size:24px; margin:8px 0 2px; } h2 { font-size:18px; margin:0 0 14px; color:var(--accent); }
+.sub { color:var(--muted); font-size:14px; margin-bottom:18px; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:16px; }
+.grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+label { display:block; font-size:13px; color:var(--muted); margin-bottom:4px; }
+input[type=text], input[type=password], input[type=number], input[type=time], select, textarea {
+  width:100%; background:var(--panel2); border:1px solid var(--line); border-radius:10px; color:var(--text);
+  padding:9px 11px; font:inherit; font-size:15px; }
+input[type=color] { width:100%; height:42px; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:3px; }
+textarea { min-height:120px; direction:rtl; resize:vertical; }
+input:focus, select:focus, textarea:focus { outline:2px solid var(--accent); outline-offset:1px; }
+button { font:inherit; font-size:15px; cursor:pointer; border:1px solid var(--line); background:var(--panel2); color:var(--text);
+  padding:9px 16px; border-radius:10px; }
+button:hover { border-color:var(--accent); }
+button.primary { background:var(--accent); color:#1a1405; border-color:var(--accent); font-weight:700; }
+button.danger { color:var(--bad); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.stat { background:var(--panel2); border-radius:12px; padding:12px 14px; }
+.stat b { display:block; font-size:17px; } .stat span { font-size:13px; color:var(--muted); }
+.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:13px; font-weight:600; }
+.pill.posted { background:#19b36b22; color:var(--ok); } .pill.error { background:#e5484d22; color:var(--bad); }
+.pill.skipped { background:#f0a02022; color:var(--warn); } .pill.none { background:#ffffff14; color:var(--muted); }
+.item { background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; }
+.item.off { opacity:.55; }
+.item .top { display:grid; gap:8px; grid-template-columns:auto 1.4fr 1fr .8fr .6fr .6fr auto; align-items:end; }
+.item .src { margin-top:8px; font-size:13px; color:var(--muted); display:grid; gap:8px; grid-template-columns:1fr 1fr; }
+.chip { display:inline-flex; align-items:center; gap:6px; background:var(--panel2); border:1px solid var(--line);
+  border-radius:999px; padding:4px 6px 4px 12px; margin:0 0 6px 6px; direction:ltr; font-size:15px; }
+.chip button { padding:0 8px; border-radius:999px; line-height:1.4; }
+.days label { display:inline-flex; gap:6px; align-items:center; color:var(--text); font-size:14px; margin:0 0 6px 14px; }
+.msg { position:fixed; bottom:16px; right:16px; left:16px; max-width:520px; margin:auto; padding:12px 16px; border-radius:12px;
+  background:#000c; border:1px solid var(--line); z-index:9; display:none; }
+.msg.ok { border-color:var(--ok); } .msg.err { border-color:var(--bad); }
+.bar { position:sticky; bottom:0; background:linear-gradient(transparent,var(--bg) 40%); padding:20px 0 10px; display:flex; gap:10px; justify-content:flex-start; }
+table { width:100%; border-collapse:collapse; font-size:14px; } th,td { text-align:right; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { color:var(--muted); font-weight:500; }
+.hide { display:none !important; } small { color:var(--muted); }
+@media (max-width:720px) { .item .top { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>پنل ربات قیمت</h1>
+  <div class="sub">تنظیمات ربات تلگرام: منبع قیمت، ساعت‌ها، طراحی عکس و متن پست.</div>
+
+  <!-- اتصال -->
+  <section class="card" id="connect">
+    <h2>اتصال به GitHub</h2>
+    <div class="grid">
+      <div><label>آدرس مخزن (مثلاً adam/price-bot)</label><input type="text" id="repo" dir="ltr" placeholder="username/price-bot"></div>
+      <div><label>توکن شخصی (Fine-grained، فقط همین مخزن)</label><input type="password" id="token" dir="ltr" placeholder="github_pat_..."></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="btnConnect">اتصال</button>
+      <button id="btnLogout" class="hide">خروج و پاک کردن توکن</button>
+      <small>توکن فقط داخل همین مرورگر ذخیره می‌شود و به جای دیگری نمی‌رود.</small>
+    </div>
+    <details style="margin-top:12px"><summary>توکن را چطور بسازم؟</summary>
+      <ol style="color:var(--muted);font-size:14px">
+        <li>GitHub ← Settings ← Developer settings ← Personal access tokens ← <b>Fine-grained tokens</b> ← Generate new token</li>
+        <li>Repository access: <b>Only select repositories</b> و فقط مخزن همین ربات</li>
+        <li>Permissions ← <b>Contents: Read and write</b> و <b>Actions: Read and write</b></li>
+        <li>Generate، توکن را همین‌جا بچسبان. (جای دیگر نفرست)</li>
+      </ol>
+    </details>
+  </section>
+
+  <div id="app" class="hide">
+    <!-- وضعیت -->
+    <section class="card">
+      <h2>وضعیت</h2>
+      <div class="grid" id="stats"></div>
+      <div class="row" style="margin-top:14px">
+        <label style="display:flex;gap:8px;align-items:center;margin:0;color:var(--text)"><input type="checkbox" id="enabled"> ربات روشن باشد</label>
+        <button id="btnNow">ارسال همین حالا</button>
+        <small id="nowHint">بعد از زدن، ربات در ۱ تا ۲ دقیقه عکس را می‌فرستد.</small>
+      </div>
+    </section>
+
+    <!-- ردیف‌ها -->
+    <section class="card">
+      <h2>قیمت‌ها (هر ردیف از کجا خوانده شود)</h2>
+      <small>ردیف‌ها و ظاهر عکس ثابت است؛ فقط منبع عدد هر ردیف را تعیین می‌کنی.</small>
+      <div id="items" style="margin-top:12px"></div>
+      <small>TGJU قیمت را به ریال می‌دهد، «تقسیم بر ۱۰» یعنی تومان. برای انس جهانی تقسیم بر ۱.</small>
+    </section>
+    <!-- زمان‌بندی -->
+    <section class="card">
+      <h2>ساعت‌های ارسال</h2>
+      <div id="times"></div>
+      <div class="row" style="margin:6px 0 12px">
+        <input type="time" id="newTime" style="max-width:140px"><button id="btnAddTime">افزودن ساعت</button>
+        <button id="btnClearTimes" class="danger">پاک کردن همه</button>
+      </div>
+      <div class="grid" style="margin-bottom:12px">
+        <div><label>تولید خودکار: از ساعت</label><input type="time" id="genFrom" value="09:00"></div>
+        <div><label>تا ساعت</label><input type="time" id="genTo" value="21:00"></div>
+        <div><label>هر چند دقیقه</label><input type="number" id="genStep" value="60" min="10" step="5"></div>
+        <div style="align-self:end"><button id="btnGen">بساز (جایگزین ساعت‌ها)</button></div>
+      </div>
+      <label>روزهای هفته</label><div class="days" id="days"></div>
+      <div class="grid" style="margin-top:8px">
+        <div><label>مهلت دیرکرد (دقیقه) — اگر ربات دیر اجرا شد تا این مدت هنوز می‌فرستد</label>
+          <input type="number" id="grace" min="10" max="240"></div>
+        <div style="align-self:end"><label style="display:flex;gap:8px;align-items:center;color:var(--text)">
+          <input type="checkbox" id="skipUnchanged"> اگر قیمت‌ها عوض نشده‌اند نفرست</label></div>
+      </div>
+      <small>ساعت‌ها به وقت تهران‌اند. GitHub هر ~۱۰ دقیقه ربات را بیدار می‌کند، پس ارسال ممکن است تا چند دقیقه دیر شود.</small>
+    </section>
+
+    <!-- متن -->
+    <section class="card">
+      <h2>متن زیر عکس (کپشن)</h2>
+      <label>متغیرها: {date} {time} {lines}</label>
+      <textarea id="caption"></textarea>
+    </section>
+    <!-- گزارش -->
+    <section class="card">
+      <h2>گزارش اجراها</h2>
+      <table><thead><tr><th>زمان</th><th>وضعیت</th><th>توضیح</th></tr></thead><tbody id="log"></tbody></table>
+    </section>
+
+    <div class="bar"><button class="primary" id="btnSave">ذخیره تنظیمات</button><button id="btnReload">بارگذاری دوباره</button></div>
+  </div>
+</div>
+<div class="msg" id="msg"></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const DAYS = [["6","شنبه"],["7","یکشنبه"],["1","دوشنبه"],["2","سه‌شنبه"],["3","چهارشنبه"],["4","پنجشنبه"],["5","جمعه"]];
+const STATUS_FA = { posted: "پست شد", error: "خطا", skipped: "ردشد (بدون تغییر)" };
+const WORKFLOW = "price-bot.yml";
+
+let cfg = null, state = {}, catalog = [], shas = {}, repo = "", token = "", dirty = false;
+
+function toast(text, kind = "ok") {
+  const m = $("msg"); m.textContent = text; m.className = "msg " + kind; m.style.display = "block";
+  clearTimeout(toast.t); toast.t = setTimeout(() => (m.style.display = "none"), kind === "err" ? 9000 : 3500);
+}
+function store(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
+function recall(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
+
+async function gh(path, opts = {}) {
+  const r = await fetch("https://api.github.com/repos/" + repo + path, {
+    ...opts,
+    headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + token, "X-GitHub-Api-Version": "2022-11-28",
+      ...(opts.body ? { "Content-Type": "application/json" } : {}) },
+    cache: "no-store",
+  });
+  if (!r.ok) {
+    let d = ""; try { d = (await r.json()).message; } catch (e) {}
+    const hint = r.status === 401 ? "توکن اشتباه یا منقضی است" : r.status === 403 ? "دسترسی توکن کافی نیست" : r.status === 404 ? "مخزن یا فایل پیدا نشد" : "";
+    throw new Error((hint || "خطای GitHub") + " (" + r.status + ")" + (d && !hint ? ": " + d : ""));
+  }
+  return r.status === 204 ? null : r.json();
+}
+const b64dec = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), (c) => c.charCodeAt(0)));
+const b64enc = (s) => { const u = new TextEncoder().encode(s); let bin = ""; u.forEach((c) => (bin += String.fromCharCode(c))); return btoa(bin); };
+
+async function readFile(name, optional) {
+  try {
+    const f = await gh("/contents/" + name + "?ref=" + encodeURIComponent(await branch()) + "&t=" + Date.now());
+    shas[name] = f.sha; return JSON.parse(b64dec(f.content));
+  } catch (e) { if (optional) return null; throw e; }
+}
+let _branch = "";
+async function branch() { if (!_branch) _branch = (await gh("")).default_branch; return _branch; }
+
+async function loadAll() {
+  cfg = await readFile("config.json");
+  state = (await readFile("state.json", true)) || {};
+  catalog = (await readFile("catalog.json", true)) || [];
+  render(); dirty = false;
+}
+
+function render() {
+  renderStats(); renderItems(); renderTimes(); renderDays(); renderCaption(); renderLog();
+  $("enabled").checked = cfg.enabled !== false;
+}function renderStats() {
+  const st = state.last_status || "none";
+  const next = nextSlots();
+  const lastPost = state.last_post_at ? fmtDate(state.last_post_at) : "—";
+  $("stats").innerHTML =
+    stat("آخرین پست", lastPost) +
+    stat("آخرین اجرا", state.last_run_at ? fmtDate(state.last_run_at) + ' <span class="pill ' + esc(st) + '">' + esc(STATUS_FA[st] || "—") + "</span>" : "—") +
+    stat("نوبت بعدی", next) +
+    stat("ردیف‌های قالب", (cfg.slots || []).length + " ردیف");
+}
+const stat = (a, b) => '<div class="stat"><span>' + a + "</span><b>" + b + "</b></div>";
+function fmtDate(iso) { try { return new Date(iso).toLocaleString("fa-IR", { timeZone: "Asia/Tehran", dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
+function nextSlots() {
+  const times = (cfg.schedule?.times || []).slice().sort(); if (!times.length) return "ساعتی تنظیم نشده";
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" }));
+  const hm = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+  const n = times.find((t) => t > hm);
+  return n ? "امروز " + n.replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]) : "فردا " + times[0].replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+}
+
+function renderItems() {
+  const box = $("items"); box.innerHTML = "";
+  (cfg.slots || []).forEach((slot) => {
+    const s = (slot.source ||= { type: "tgju", divisor: 10, decimals: 0 });
+    const d = document.createElement("div"); d.className = "item";
+    const opts = catalog.map((c) => '<option value="' + esc(c.slug) + '"' + (c.slug === s.slug ? " selected" : "") + ">" + esc(c.name) + " (" + esc(c.slug) + ")</option>").join("");
+    const known = catalog.some((c) => c.slug === s.slug);
+    d.innerHTML =
+      '<div class="top" style="grid-template-columns:1.2fr 1fr 1.6fr .7fr .6fr">' +
+      '<div><label>ردیف در عکس</label><b>' + esc(slot.label) + " <small>(" + esc(slot.unit) + ")</small></b></div>" +
+      '<div><label>منبع</label><select data-k="type"><option value="tgju"' + (s.type !== "css" ? " selected" : "") + '>TGJU</option><option value="css"' + (s.type === "css" ? " selected" : "") + ">سایت دلخواه</option></select></div>" +
+      '<div class="' + (s.type === "css" ? "hide" : "") + '"><label>آیتم TGJU</label><select data-k="slug">' + (known || !s.slug ? "" : '<option value="' + esc(s.slug) + '" selected>' + esc(s.slug) + "</option>") + opts + "</select></div>" +
+      '<div class="' + (s.type === "css" ? "hide" : "") + '" style="display:none"></div>' +
+      '<div><label>تقسیم بر</label><input type="number" data-k="divisor" value="' + esc(s.divisor ?? 1) + '" min="0.0001" step="any"></div>' +
+      '<div><label>اعشار</label><input type="number" data-k="decimals" value="' + esc(s.decimals ?? 0) + '" min="0" max="4"></div>' +
+      "</div>" +
+      (s.type === "css"
+        ? '<div class="src"><div><label>آدرس صفحه (https)</label><input type="text" dir="ltr" data-k="url" value="' + esc(s.url) + '"></div>' +
+          '<div><label>سلکتور CSS عدد</label><input type="text" dir="ltr" data-k="selector" value="' + esc(s.selector) + '"></div></div>'
+        : "");
+    d.querySelectorAll("[data-k]").forEach((inp) => inp.addEventListener("input", () => {
+      const k = inp.dataset.k; s[k] = inp.type === "number" ? Number(inp.value) : inp.value; dirty = true;
+      if (k === "type") renderItems();
+    }));
+    box.appendChild(d);
+  });
+}
+function renderTimes() {
+  const box = $("times"); box.innerHTML = "";
+  const times = (cfg.schedule.times = (cfg.schedule.times || []).slice().sort());
+  times.forEach((t, i) => {
+    const c = document.createElement("span"); c.className = "chip"; c.innerHTML = esc(t) + '<button title="حذف">✕</button>';
+    c.querySelector("button").onclick = () => { times.splice(i, 1); dirty = true; renderTimes(); renderStats(); };
+    box.appendChild(c);
+  });
+  if (!times.length) box.innerHTML = "<small>هیچ ساعتی تنظیم نشده؛ ربات خودکار چیزی نمی‌فرستد.</small>";
+}
+$("btnAddTime").onclick = () => {
+  const v = $("newTime").value; if (!v) return;
+  if (!cfg.schedule.times.includes(v)) cfg.schedule.times.push(v);
+  dirty = true; renderTimes(); renderStats();
+};
+$("btnClearTimes").onclick = () => { cfg.schedule.times = []; dirty = true; renderTimes(); renderStats(); };
+$("btnGen").onclick = () => {
+  const toMin = (s) => { const [h, m] = s.split(":").map(Number); return h * 60 + m; };
+  const a = toMin($("genFrom").value || "09:00"), b = toMin($("genTo").value || "21:00"), step = Math.max(10, Number($("genStep").value) || 60);
+  if (b < a) return toast("ساعت پایان باید بعد از شروع باشد", "err");
+  const out = []; for (let m = a; m <= b; m += step) out.push(String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
+  if (out.length > 48) return toast("بیشتر از ۴۸ پست در روز مجاز نیست", "err");
+  cfg.schedule.times = out; dirty = true; renderTimes(); renderStats();
+};
+function renderDays() {
+  const sel = new Set((cfg.schedule.days || []).map(String)); const all = !sel.size;
+  $("days").innerHTML = '<label><input type="checkbox" id="dAll" ' + (all ? "checked" : "") + "> همه‌ی روزها</label>" +
+    DAYS.map(([v, n]) => '<label><input type="checkbox" data-d="' + v + '" ' + (all || sel.has(v) ? "checked" : "") + (all ? " disabled" : "") + "> " + n + "</label>").join("");
+  const upd = () => {
+    if ($("dAll").checked) cfg.schedule.days = [];
+    else cfg.schedule.days = [...document.querySelectorAll("[data-d]")].filter((x) => x.checked).map((x) => Number(x.dataset.d));
+    dirty = true;
+  };
+  $("dAll").onchange = () => { document.querySelectorAll("[data-d]").forEach((x) => { x.disabled = $("dAll").checked; x.checked = $("dAll").checked || x.checked; }); upd(); };
+  document.querySelectorAll("[data-d]").forEach((x) => (x.onchange = upd));
+  $("grace").value = cfg.schedule.grace_minutes ?? 60; $("skipUnchanged").checked = cfg.schedule.skip_unchanged !== false;
+}
+$("grace").oninput = () => { cfg.schedule.grace_minutes = Math.min(240, Math.max(10, Number($("grace").value) || 60)); dirty = true; };
+$("skipUnchanged").onchange = () => { cfg.schedule.skip_unchanged = $("skipUnchanged").checked; dirty = true; };
+$("enabled").onchange = () => { cfg.enabled = $("enabled").checked; dirty = true; };
+
+function renderCaption() { $("caption").value = cfg.caption || ""; }
+$("caption").oninput = () => { cfg.caption = $("caption").value; dirty = true; };
+function renderLog() {
+  const rows = state.log || [];
+  $("log").innerHTML = rows.length
+    ? rows.map((l) => "<tr><td>" + esc(fmtDate(l.at)) + '</td><td><span class="pill ' + esc(l.status) + '">' + esc(STATUS_FA[l.status] || l.status) + "</span></td><td>" + esc(l.message) + "</td></tr>").join("")
+    : '<tr><td colspan="3"><small>هنوز اجرایی ثبت نشده.</small></td></tr>';
+}
+
+function validate() {
+  for (const slot of cfg.slots) {
+    const s = slot.source || {};
+    if (!(Number(s.divisor) > 0)) return "«تقسیم بر» باید بزرگ‌تر از صفر باشد (" + slot.label + ")";
+    if (s.type === "css") {
+      if (!/^https:\/\//i.test(s.url || "")) return "آدرس باید با https:// شروع شود (" + slot.label + ")";
+      if (!String(s.selector || "").trim()) return "سلکتور خالی است (" + slot.label + ")";
+    } else if (!s.slug) return "آیتم TGJU انتخاب نشده (" + slot.label + ")";
+  }
+  return "";
+}$("btnSave").onclick = async () => {
+  const err = validate(); if (err) return toast(err, "err");
+  $("btnSave").disabled = true;
+  try {
+    const res = await gh("/contents/config.json", { method: "PUT", body: JSON.stringify({
+      message: "panel: update settings", content: b64enc(JSON.stringify(cfg, null, 2) + "\n"), sha: shas["config.json"], branch: await branch() }) });
+    shas["config.json"] = res.content.sha; dirty = false; toast("ذخیره شد. از اجرای بعدی ربات اعمال می‌شود.");
+  } catch (e) { toast(e.message + " — اگر کسی همزمان تغییر داده «بارگذاری دوباره» را بزن.", "err"); }
+  $("btnSave").disabled = false;
+};
+$("btnReload").onclick = async () => {
+  if (dirty && !confirm("تغییرات ذخیره‌نشده از بین می‌رود. ادامه؟")) return;
+  try { await loadAll(); toast("بارگذاری شد"); } catch (e) { toast(e.message, "err"); }
+};
+$("btnNow").onclick = async () => {
+  if (dirty) return toast("اول تنظیمات را ذخیره کن، بعد ارسال کن", "err");
+  if (!confirm("همین حالا قیمت‌ها در کانال پست شود؟")) return;
+  $("btnNow").disabled = true;
+  try {
+    await gh("/actions/workflows/" + WORKFLOW + "/dispatches", { method: "POST", body: JSON.stringify({ ref: await branch(), inputs: { force: "true" } }) });
+    toast("دستور ارسال شد. تا ۲ دقیقه دیگر در کانال است.");
+  } catch (e) { toast(e.message, "err"); }
+  setTimeout(() => ($("btnNow").disabled = false), 15000);
+};
+
+async function connect() {
+  repo = $("repo").value.trim().replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/, "").replace(/\/$/, "");
+  token = $("token").value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return toast("آدرس مخزن را به شکل username/price-bot بنویس", "err");
+  if (!token) return toast("توکن را وارد کن", "err");
+  $("btnConnect").disabled = true;
+  try {
+    _branch = ""; await loadAll();
+    store("pb_repo", repo); store("pb_token", token);
+    $("app").classList.remove("hide"); $("btnLogout").classList.remove("hide"); $("connect").querySelector(".grid").classList.add("hide");
+    $("btnConnect").classList.add("hide"); toast("وصل شد");
+  } catch (e) { toast(e.message, "err"); }
+  $("btnConnect").disabled = false;
+}
+$("btnConnect").onclick = connect;
+$("btnLogout").onclick = () => { store("pb_token", null); location.reload(); };
+window.addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+(function init() {
+  $("repo").value = recall("pb_repo");
+  const m = location.hostname.match(/^([\w-]+)\.github\.io$/i), p = location.pathname.split("/")[1];
+  if (!$("repo").value && m && p) $("repo").value = m[1] + "/" + p;
+  const t = recall("pb_token"); if (t) { $("token").value = t; if ($("repo").value) connect(); }
+})();
+</script>
+</body>
+</html>

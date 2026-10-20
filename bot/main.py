@@ -7,10 +7,14 @@
   python bot/main.py --catalog          -> refresh catalog.json (list of TGJU items for the panel)
 """
 import argparse
+import ipaddress
 import json
 import os
+import re
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -50,6 +54,58 @@ def add_log(state, now, status, message):
     state["last_run_at"] = now.isoformat(timespec="seconds")
     state.setdefault("log", []).insert(0, {"at": state["last_run_at"], "status": status, "message": message})
     del state["log"][LOG_KEEP:]
+
+
+MAX_POSTS_PER_DAY = 30  # hard stop, whatever the config says
+
+
+def config_problem(cfg):
+    """Return a Persian error message if config.json is unsafe or broken, else ''."""
+    sch = cfg.get("schedule", {})
+    times = sch.get("times", [])
+    if not isinstance(times, list) or len(times) > 48:
+        return "بیشتر از ۴۸ ساعت ارسال در روز مجاز نیست"
+    for t in times:
+        if not re.fullmatch(r"([01]\d|2[0-3]):[0-5]\d", str(t)):
+            return f"ساعت نامعتبر: {t}"
+    slots = cfg.get("slots", [])
+    if not slots:
+        return "هیچ ردیفی تعریف نشده"
+    for s in slots:
+        src = s.get("source", {})
+        try:
+            if not float(src.get("divisor", 1)) > 0:
+                return f"«تقسیم بر» ردیف {s.get('label')} معتبر نیست"
+        except (TypeError, ValueError):
+            return f"«تقسیم بر» ردیف {s.get('label')} عدد نیست"
+        if src.get("type") == "css":
+            url = str(src.get("url", ""))
+            host = urlparse(url).hostname or ""
+            if urlparse(url).scheme != "https" or not host or host == "localhost" or _private_host(host):
+                return f"آدرس منبع ردیف {s.get('label')} باید https و عمومی باشد"
+            if len(str(src.get("selector", ""))) > 200:
+                return f"سلکتور ردیف {s.get('label')} خیلی بلند است"
+    return ""
+
+
+def _private_host(host):
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return host.endswith((".local", ".internal"))
+    return ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved
+
+
+def posts_last_24h(state, now):
+    cutoff = now - timedelta(hours=24)
+    kept = []
+    for iso in state.get("recent_posts", []):
+        try:
+            if datetime.fromisoformat(iso) > cutoff:
+                kept.append(iso)
+        except ValueError:
+            pass
+    return kept
 
 
 def collect_rows(cfg):
@@ -106,6 +162,16 @@ def main():
         print("nothing due")
         return 0
 
+    problem = config_problem(cfg)
+    if not problem and not args.dry and len(posts_last_24h(state, now)) >= MAX_POSTS_PER_DAY:
+        problem = f"سقف {MAX_POSTS_PER_DAY} پست در ۲۴ ساعت پر شده؛ برای جلوگیری از اسپم پست نشد"
+    if problem:
+        print(problem)
+        if not args.dry and state.get("last_message") != problem:
+            add_log(state, now, "error", problem)
+            save_state(state)
+        return 1
+
     rows, errors = collect_rows(cfg)
     if errors:
         msg = "قیمت همه‌ی ردیف‌ها خوانده نشد؛ چیزی پست نشد. " + " | ".join(errors)
@@ -158,6 +224,7 @@ def main():
     state["done_slots"] = prune_slots(state.get("done_slots", []) + slots)
     state["last_values"] = values
     state["last_post_at"] = now.isoformat(timespec="seconds")
+    state["recent_posts"] = posts_last_24h(state, now) + [state["last_post_at"]]
     add_log(state, now, "posted", "پست شد")
     save_state(state)
     print("posted")

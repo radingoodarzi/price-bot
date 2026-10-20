@@ -57,6 +57,7 @@ def add_log(state, now, status, message):
 
 
 MAX_POSTS_PER_DAY = 30  # hard stop, whatever the config says
+MIN_GAP_MINUTES = 5  # no two posts closer than this (double triggers, a leaked dispatch token)
 
 
 def config_problem(cfg):
@@ -106,6 +107,14 @@ def posts_last_24h(state, now):
         except ValueError:
             pass
     return kept
+
+
+def too_soon(state, now, gap=MIN_GAP_MINUTES):
+    try:
+        last = datetime.fromisoformat(state.get("last_post_at", ""))
+    except (TypeError, ValueError):
+        return False
+    return now - last < timedelta(minutes=gap)
 
 
 def collect_rows(cfg):
@@ -165,6 +174,8 @@ def main():
     problem = config_problem(cfg)
     if not problem and not args.dry and len(posts_last_24h(state, now)) >= MAX_POSTS_PER_DAY:
         problem = f"سقف {MAX_POSTS_PER_DAY} پست در ۲۴ ساعت پر شده؛ برای جلوگیری از اسپم پست نشد"
+    if not problem and not args.dry and too_soon(state, now):
+        problem = f"کمتر از {MIN_GAP_MINUTES} دقیقه از پست قبلی گذشته؛ پست نشد"
     if problem:
         print(problem)
         if not args.dry and state.get("last_message") != problem:

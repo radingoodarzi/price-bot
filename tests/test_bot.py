@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "bot"))
 
-from main import config_problem, posts_last_24h  # noqa: E402
+from main import config_problem, posts_last_24h, too_soon  # noqa: E402
 from render import fmt_price, jalali_stamp  # noqa: E402
 from schedule import due_slots  # noqa: E402
 from sources import parse_tgju, to_number  # noqa: E402
@@ -79,6 +79,12 @@ class Schedule(unittest.TestCase):
         now = datetime(2026, 10, 20, 12, 0, tzinfo=TZ)
         state = {"recent_posts": ["2026-10-20T11:00:00+03:30", "2026-10-18T11:00:00+03:30", "bad"]}
         self.assertEqual(len(posts_last_24h(state, now)), 1)
+
+    def test_min_gap(self):
+        now = datetime(2026, 10, 20, 12, 0, tzinfo=TZ)
+        self.assertTrue(too_soon({"last_post_at": "2026-10-20T11:58:00+03:30"}, now))
+        self.assertFalse(too_soon({"last_post_at": "2026-10-20T11:50:00+03:30"}, now))
+        self.assertFalse(too_soon({}, now))
 
 
 class Parsing(unittest.TestCase):

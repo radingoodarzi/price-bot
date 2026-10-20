@@ -1,8 +1,11 @@
 name: price-bot
 
 on:
+  # GitHub's own timer is best-effort: on a new repo it can stay silent for hours, and runs at
+  # minute :00 are the first to be dropped. Off-peak minutes help; the reliable trigger is an
+  # external cron (cron-job.org) calling workflow_dispatch — see README.
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "7,17,27,37,47,57 * * * *"
   workflow_dispatch:
     inputs:
       force:
@@ -29,6 +32,10 @@ jobs:
       FORCE: ${{ inputs.force }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # tip of main at run time, not the commit that triggered a queued run:
+          # otherwise a queued run reads an old state.json and posts the same slot twice
+          ref: ${{ github.event.repository.default_branch }}
 
       - uses: actions/setup-python@v5
         with:

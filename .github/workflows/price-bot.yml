@@ -37,7 +37,7 @@ jobs:
           # otherwise a queued run reads an old state.json and posts the same slot twice
           ref: ${{ github.event.repository.default_branch }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip

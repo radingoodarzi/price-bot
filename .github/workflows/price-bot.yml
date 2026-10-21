@@ -31,7 +31,7 @@ jobs:
     env:
       FORCE: ${{ inputs.force }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # tip of main at run time, not the commit that triggered a queued run:
           # otherwise a queued run reads an old state.json and posts the same slot twice

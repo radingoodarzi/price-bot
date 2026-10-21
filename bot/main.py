@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from render import build_html, caption_text, fmt_price, render_png  # noqa: E402
 from schedule import due_slots, now_in, prune_slots  # noqa: E402
 from sources import Fetcher  # noqa: E402
-from telegram import send_photo  # noqa: E402
+from telegram import ChatMigrated, send_photo  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = ROOT / "config.json"
@@ -232,8 +232,12 @@ def main():
         print(caption)
         return 0
 
+    posted_msg = "پست شد"
     try:
         send_photo(os.environ["TELEGRAM_BOT_TOKEN"], os.environ["TELEGRAM_CHAT_ID"], png, caption)
+    except ChatMigrated:
+        # the new id is not written here: state.json is public
+        posted_msg = "پست شد (گروه به سوپرگروه تبدیل شده؛ ربات خودش به آیدی جدید فرستاد)"
     except KeyError as exc:
         msg = f"Secret تنظیم نشده: {exc.args[0]}"
         print(msg)
@@ -252,7 +256,7 @@ def main():
     state["last_values"] = values
     state["last_post_at"] = now.isoformat(timespec="seconds")
     state["recent_posts"] = posts_last_24h(state, now) + [state["last_post_at"]]
-    add_log(state, now, "posted", "پست شد")
+    add_log(state, now, "posted", posted_msg)
     save_state(state)
     print("posted")
     return 0

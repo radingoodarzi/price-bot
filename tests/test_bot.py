@@ -112,6 +112,31 @@ class Retry(unittest.TestCase):
         self.assertEqual((errors, slept), ([], []))
 
 
+class Telegram(unittest.TestCase):
+    def test_follows_supergroup_migration(self):
+        import tempfile
+        from unittest import mock
+        import telegram
+
+        sent = []
+
+        def fake_post(url, data, files, timeout):
+            sent.append(data["chat_id"])
+            r = mock.Mock(status_code=200)
+            if data["chat_id"] == "-1":
+                r.json.return_value = {"ok": False, "description": "upgraded", "parameters": {"migrate_to_chat_id": -1009}}
+            else:
+                r.json.return_value = {"ok": True, "result": {"message_id": 7}}
+            return r
+
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as fh:
+            fh.write(b"x")
+        with mock.patch.object(telegram.requests, "post", fake_post):
+            with self.assertRaises(telegram.ChatMigrated) as ctx:
+                telegram.send_photo("t", "-1", fh.name)
+        self.assertEqual((sent, ctx.exception.new_id, ctx.exception.message_id), (["-1", -1009], -1009, 7))
+
+
 class Parsing(unittest.TestCase):
     def test_numbers(self):
         self.assertEqual(to_number("۲۶٬۴۶۰٬۱۳۲"), 26460132.0)

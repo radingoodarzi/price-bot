@@ -19,6 +19,11 @@
  },
  "log": [
   {
+   "at": "2026-10-21T16:53:44+03:30",
+   "status": "error",
+   "message": "تلگرام: Bad Request: group chat was upgraded to a supergroup chat"
+  },
+  {
    "at": "2026-10-21T16:41:58+03:30",
    "status": "error",
    "message": "کمتر از 5 دقیقه از پست قبلی گذشته؛ پست نشد"
@@ -71,8 +76,8 @@
  ],
  "last_post_at": "2026-10-21T16:37:24+03:30",
  "last_status": "error",
- "last_message": "کمتر از 5 دقیقه از پست قبلی گذشته؛ پست نشد",
- "last_run_at": "2026-10-21T16:41:58+03:30",
+ "last_message": "تلگرام: Bad Request: group chat was upgraded to a supergroup chat",
+ "last_run_at": "2026-10-21T16:53:44+03:30",
  "recent_posts": [
   "2026-10-20T19:23:01+03:30",
   "2026-10-20T19:50:24+03:30",

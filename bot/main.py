@@ -12,6 +12,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlparse
@@ -117,6 +118,21 @@ def too_soon(state, now, gap=MIN_GAP_MINUTES):
     return now - last < timedelta(minutes=gap)
 
 
+RETRY_WAITS = (45, 90)  # seconds before the 2nd and 3rd attempt when a source misbehaves
+
+
+def collect_rows_with_retry(cfg, waits=RETRY_WAITS, sleep=time.sleep):
+    """Sources (TGJU) sometimes return a broken page for a moment: try again with a fresh fetch."""
+    rows, errors = collect_rows(cfg)
+    for attempt, wait in enumerate(waits, start=2):
+        if not errors:
+            break
+        print(f"read failed, retry {attempt} in {wait}s:", " | ".join(errors))
+        sleep(wait)
+        rows, errors = collect_rows(cfg)
+    return rows, errors
+
+
 def collect_rows(cfg):
     """Read one price per template slot. The template has fixed rows, so ANY failure aborts the post."""
     fetcher = Fetcher()
@@ -183,7 +199,7 @@ def main():
             save_state(state)
         return 1
 
-    rows, errors = collect_rows(cfg)
+    rows, errors = collect_rows_with_retry(cfg, waits=() if args.dry else RETRY_WAITS)
     if errors:
         msg = "قیمت همه‌ی ردیف‌ها خوانده نشد؛ چیزی پست نشد. " + " | ".join(errors)
         print(msg)

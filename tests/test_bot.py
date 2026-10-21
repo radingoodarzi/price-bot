@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "bot"))
 
+import main  # noqa: E402
 from main import config_problem, posts_last_24h, too_soon  # noqa: E402
 from render import fmt_price, jalali_stamp  # noqa: E402
 from schedule import due_slots  # noqa: E402
@@ -85,6 +86,30 @@ class Schedule(unittest.TestCase):
         self.assertTrue(too_soon({"last_post_at": "2026-10-20T11:58:00+03:30"}, now))
         self.assertFalse(too_soon({"last_post_at": "2026-10-20T11:50:00+03:30"}, now))
         self.assertFalse(too_soon({}, now))
+
+
+class Retry(unittest.TestCase):
+    def run_with(self, results):
+        calls, slept = iter(results), []
+        orig = main.collect_rows
+        main.collect_rows = lambda cfg: next(calls)
+        try:
+            out = main.collect_rows_with_retry({}, waits=(45, 90), sleep=slept.append)
+        finally:
+            main.collect_rows = orig
+        return out, slept
+
+    def test_recovers_on_second_try(self):
+        (rows, errors), slept = self.run_with([([], ["x"]), (["ok"], [])])
+        self.assertEqual((rows, errors, slept), (["ok"], [], [45]))
+
+    def test_gives_up_after_three(self):
+        (rows, errors), slept = self.run_with([([], ["a"]), ([], ["b"]), ([], ["c"])])
+        self.assertEqual((errors, slept), (["c"], [45, 90]))
+
+    def test_no_wait_when_ok(self):
+        (_, errors), slept = self.run_with([(["ok"], [])])
+        self.assertEqual((errors, slept), ([], []))
 
 
 class Parsing(unittest.TestCase):

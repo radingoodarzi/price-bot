@@ -25,7 +25,7 @@ jobs:
     # never run (and never expose secrets) in forks or copies of this repo
     if: github.repository_owner == 'radingoodarzi'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15  # room for source retries
     permissions:
       contents: write   # only to commit state.json
     env:

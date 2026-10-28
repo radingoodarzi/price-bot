@@ -11,7 +11,7 @@ import main  # noqa: E402
 from main import config_problem, posts_last_24h, too_soon  # noqa: E402
 from render import fmt_price, jalali_stamp  # noqa: E402
 from schedule import due_slots  # noqa: E402
-from sources import parse_tgju, to_number  # noqa: E402
+from sources import parse_tgju, parse_tgju_live, to_number  # noqa: E402
 
 TZ = ZoneInfo("Asia/Tehran")
 
@@ -152,6 +152,18 @@ class Parsing(unittest.TestCase):
         self.assertEqual(row["price"], 265144000.0)
         self.assertEqual(row["direction"], "up")
         self.assertEqual(row["percent"], 1.29)
+
+    def test_tgju_live(self):
+        data = {"current": {
+            "geram18": {"p": "264,105,000", "h": "265,139,000", "l": "262,066,000", "dp": 0.78, "dt": "high", "ts": "2026-10-28 18:53:39"},
+            "ons": {"p": "4,045.72", "dp": 0.33, "dt": "low"},
+            "junk": "x",
+        }}
+        rows = parse_tgju_live(data)
+        self.assertEqual(rows["geram18"]["price"], 264105000)
+        self.assertEqual(rows["geram18"]["direction"], "up")
+        self.assertEqual(rows["ons"]["price"], 4045.72)
+        self.assertNotIn("junk", rows)
 
     def test_format(self):
         self.assertEqual(fmt_price(268300000), "۲۶۸,۳۰۰,۰۰۰")

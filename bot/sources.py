@@ -10,6 +10,8 @@ BROWSER_UA = (
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 )
 TGJU_URL = "https://www.tgju.org/"
+# The HTML of TGJU_URL carries the previous close; the page fills in live prices from this feed with JS.
+TGJU_LIVE_URL = "https://call1.tgju.org/ajax.json"
 
 _DIGITS = str.maketrans("۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩", "01234567890123456789")
 
@@ -73,6 +75,44 @@ def parse_tgju(html):
     return rows
 
 
+def fetch_json(url, tries=3):
+    last = None
+    for i in range(tries):
+        try:
+            r = requests.get(
+                url,
+                headers={"User-Agent": BROWSER_UA, "Referer": TGJU_URL, "Accept": "application/json"},
+                timeout=25,
+            )
+            r.raise_for_status()
+            return r.json()
+        except (requests.RequestException, ValueError) as exc:
+            last = exc
+            time.sleep(2 * (i + 1))
+    raise RuntimeError(f"cannot fetch {url}: {last}")
+
+
+def parse_tgju_live(data):
+    """Return {slug: {price, percent, direction, low, high, ts}} from TGJU's live feed."""
+    rows = {}
+    for slug, v in ((data or {}).get("current") or {}).items():
+        if not isinstance(v, dict):
+            continue
+        price = to_number(v.get("p"))
+        if price is None:
+            continue
+        dt = v.get("dt")
+        rows[slug] = {
+            "price": price,
+            "percent": v.get("dp"),
+            "direction": "up" if dt == "high" else "down" if dt == "low" else "flat",
+            "low": to_number(v.get("l")),
+            "high": to_number(v.get("h")),
+            "ts": v.get("ts"),
+        }
+    return rows
+
+
 class SourceError(Exception):
     pass
 
@@ -83,6 +123,7 @@ class Fetcher:
     def __init__(self):
         self._pages = {}
         self._tgju = None
+        self._live = None
 
     def _page(self, url):
         if url not in self._pages:
@@ -96,12 +137,19 @@ class Fetcher:
                 raise SourceError("ساختار TGJU عوض شده (ردیف کم است)")
         return self._tgju
 
+    def tgju_live(self):
+        if self._live is None:
+            self._live = parse_tgju_live(fetch_json(TGJU_LIVE_URL))
+            if len(self._live) < 10:
+                raise SourceError("قیمت زنده‌ی TGJU خوانده نشد (ردیف کم است)")
+        return self._live
+
     def read(self, item):
         """Return dict(price, percent, direction) already divided by item['divisor']."""
         div = float(item.get("divisor") or 1)
         kind = item.get("type", "tgju")
         if kind == "tgju":
-            row = self.tgju().get(item.get("slug", ""))
+            row = self.tgju_live().get(item.get("slug", ""))
             if not row:
                 raise SourceError(f"آیتم «{item.get('slug')}» در TGJU پیدا نشد")
             return {

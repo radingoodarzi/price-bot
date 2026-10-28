@@ -191,7 +191,14 @@ def main():
     if not problem and not args.dry and len(posts_last_24h(state, now)) >= MAX_POSTS_PER_DAY:
         problem = f"سقف {MAX_POSTS_PER_DAY} پست در ۲۴ ساعت پر شده؛ برای جلوگیری از اسپم پست نشد"
     if not problem and not args.dry and too_soon(state, now):
-        problem = f"کمتر از {MIN_GAP_MINUTES} دقیقه از پست قبلی گذشته؛ پست نشد"
+        # an expected guard (e.g. "send now" pressed twice), not a failure: no red run, no "خطا" in the panel;
+        # a scheduled slot stays undone, so the next wake-up posts it
+        msg = f"پست قبلی کمتر از {MIN_GAP_MINUTES} دقیقه پیش رفته؛ برای جلوگیری از پست تکراری صبر شد"
+        print(msg)
+        if state.get("last_message") != msg:
+            add_log(state, now, "skipped", msg)
+            save_state(state)
+        return 0
     if problem:
         print(problem)
         if not args.dry and state.get("last_message") != problem:

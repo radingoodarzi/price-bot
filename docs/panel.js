@@ -4,7 +4,7 @@ if (window.top !== window.self) { document.documentElement.innerHTML = ''; throw
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const DAYS = [["6","شنبه"],["7","یکشنبه"],["1","دوشنبه"],["2","سه‌شنبه"],["3","چهارشنبه"],["4","پنجشنبه"],["5","جمعه"]];
-const STATUS_FA = { posted: "پست شد", error: "خطا", skipped: "ردشد (بدون تغییر)" };
+const STATUS_FA = { posted: "پست شد", error: "خطا", skipped: "رد شد" };
 const WORKFLOW = "price-bot.yml";
 
 let cfg = null, state = {}, catalog = [], shas = {}, repo = "", token = "", dirty = false;

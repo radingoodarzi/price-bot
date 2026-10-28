@@ -5,7 +5,7 @@
     "times": ["12:00", "15:00", "18:00"],
     "days": [],
     "grace_minutes": 60,
-    "skip_unchanged": true
+    "skip_unchanged": false
   },
   "slots": [
     {
